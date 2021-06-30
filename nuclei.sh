@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#Change Path According to your templates
+
+echo "Usage: bash nuclei.sh domains.txt"
+
 
 echo "Testing for CVEs"
 echo "----------------------------------------------"
