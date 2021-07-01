@@ -19,12 +19,12 @@ echo "*************************************************************************"
 
 python3 ~/tools/EyeWitness/Python/EyeWitness.py -f ALive.txt -d Eyewitness --web
 
-echo "${RED}Sending all URLs to Nuclei${ENDCOLOR}"
+echo "Sending all URLs to Nuclei"
 echo "*************************************************************************"
 
 bash nuclei.sh ALive.txt
 
-echo "${RED}Scanning for Open Ports${ENDCOLOR}"
+echo "Scanning for Open Ports"
 echo "*************************************************************************"
 naabu -v -iL Subdomain.txt -o naabu_port    
 nmap -sC -sV -iL Alive.txt -t 3 -o
