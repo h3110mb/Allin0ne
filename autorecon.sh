@@ -24,6 +24,8 @@ echo "*************************************************************************"
 
 python3 ~/tools/EyeWitness/Python/EyeWitness.py -f ALive.txt -d Eyewitness --web
 
+echo "${RED}Sending all URLs to Nuclei${ENDCOLOR}"
+echo "*************************************************************************"
 
-
+bash nuclei.sh ALive.txt
 
