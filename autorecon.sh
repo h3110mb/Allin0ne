@@ -14,11 +14,6 @@ echo "Testing for Alive Subdomains"
 echo "*************************************************************************"
 cat Final_subdomain.txt| httpx > ALive.txt
 
-echo "Scanning for Open Ports"
-echo "*************************************************************************"
-
-
-
 echo "Grabbing Screenshots "
 echo "*************************************************************************"
 
@@ -28,4 +23,10 @@ echo "${RED}Sending all URLs to Nuclei${ENDCOLOR}"
 echo "*************************************************************************"
 
 bash nuclei.sh ALive.txt
+
+echo "${RED}Scanning for Open Ports${ENDCOLOR}"
+echo "*************************************************************************"
+naabu -v -iL Subdomain.txt -o naabu_port    
+nmap -sC -sV -iL Alive.txt -t 3 -o
+
 
