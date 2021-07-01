@@ -3,6 +3,9 @@
 #Change Path According to your templates
 
 echo "Usage: bash nuclei.sh domains.txt"
+Sleep 30
+
+nuclei --update-templates
 
 
 echo "Testing for CVEs"
@@ -42,6 +45,3 @@ echo "DNS"
 echo "-----------------------------------------"
 nuclei -l $1 -t ~/nuclei-templates/dns/ -silent -c 20 
 
-echo "Fuzzing "
-echo "-----------------------------------------"
-nuclei -l $1 -t ~/nuclei-templates/fuzzing/ -silent -c 20
