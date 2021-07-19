@@ -74,7 +74,7 @@ nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/dns/ -silent -c 20 
 
 echo "Grabbing Screenshots "
 echo "*************************************************************************"
-python3 ~/tools/EyeWitness/Python/EyeWitness.py -f $1/recon/ALive.txt -d $1/eyewitness --web --no-prompt
+cat $1/recon/ALive.txt | aquatone -o $1/screenshot/aquatone
 
 echo "Scanning for Open Ports"
 echo "*************************************************************************"
