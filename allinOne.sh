@@ -4,7 +4,7 @@ mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,cli
 
 
 echo "Gathering Subdomain"
-echo "*************************************************************************"
+echo "***************************************************************************"
 sleep 15
 
 subfinder -silent -d $1 > $1/recon/Subdomain.txt 
@@ -34,11 +34,11 @@ sleep 15
 
 
 echo "Testing for CVEs"
-echo "----------------------------------------------"
+echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/cves/ -silent -c 20 -o $1/nuclei/cve.txt
 
 echo "Testing for Subdomain Takeover"
-echo "-----------------------------------------------"
+echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/takeovers/ -silent -c 20 -o $1/nuclei/subtko.txt
 
 
@@ -47,28 +47,28 @@ echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/misconfiguration/ -silent -c 20 -o $1/nuclei/sec_misconfig.txt
 
 echo "Testing for Files"
-echo "-------------------------------"
+echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/exposures/files/  -silent -c 20 -o $1/nuclei/Files.txt
 
 echo "Testing for Vulnerabilities "
-echo "--------------------------------------"
+echo "------------------------------------------------------"
 
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/vulnerabilities/ -silent -c 20 -o $1/nuclei/Vuln.txt
 
 echo "testing for Default Logins"
-echo "----------------------------------------"
+echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/default-logins/ -silent -c 20 -o $1/nuclei/Default.txt
 
 echo "Testing Miscellaneous"
-echo "-----------------------------------------"
+echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/miscellaneous/ -silent -c 20 -o $1/nuclei/misc.txt
 
 echo "backup Files"
-echo "-----------------------------------------"
+echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/exposures/backups/ -silent -c 20 -o $1/nuclei/backup.txt
 
 echo "DNS"
-echo "-----------------------------------------"
+echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/dns/ -silent -c 20 -o $1/nuclei/DNS.txt
 
 
@@ -100,4 +100,5 @@ echo "Checking For Clickjacking"
 echo "*************************************************************************"
 sleep 15
 python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk '{print $2}' >> $1/clickjack/vulnerable.txt
+
 
