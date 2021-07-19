@@ -89,5 +89,9 @@ sleep 30
 
 echo "Analysing Js Files"
 echo "*************************************************************************"
+cat $1/waybackurls/wayback.txt | grep "\.js" | uniq | sort > $1/waybackurls/js.txt
+cat $1/waybackurls/js.txt | hakcheckurl | grep -v 404 | grep -v 500 | grep -v 410 > $1/js/js_alive.txt
+
+
 
 
