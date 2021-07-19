@@ -93,5 +93,7 @@ cat $1/waybackurls/wayback.txt | grep "\.js" | uniq | sort > $1/waybackurls/js.t
 cat $1/waybackurls/js.txt | hakcheckurl | grep -v 404 | grep -v 500 | grep -v 410 > $1/js/js_alive.txt
 
 
-
+echo "Checking For Broken Links"
+echo "*************************************************************************"
+for domain in $(cat $1/recon/ALive.txt );do blc $domain;done >> $1/BLC/broken_link.txt
 
