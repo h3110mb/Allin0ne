@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports}
+mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack}
 
 
 echo "Gathering Subdomain"
@@ -83,8 +83,7 @@ nmap -sC -sV -iL $1/recon/ALive.txt -t 3 -o $1/ports/nmap
 
 echo "Testing for Subdomain Takeover"
 echo "*************************************************************************"
-Subzy -targets $1/recon/Final_subdomain.txt > $1/subtko/output.txt
-
+SubOver -l $1/recon/Subdomain.txt -v > $1/subtko/output.txt
 sleep 30
 
 echo "Analysing Js Files"
@@ -96,4 +95,9 @@ cat $1/waybackurls/js.txt | hakcheckurl | grep -v 404 | grep -v 500 | grep -v 41
 echo "Checking For Broken Links"
 echo "*************************************************************************"
 for domain in $(cat $1/recon/ALive.txt );do blc $domain;done >> $1/BLC/broken_link.txt
+
+echo "Checking For Clickjacking"
+echo "*************************************************************************"
+sleep 15
+python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk '{print $2}' >> $1/clickjack/vulnerable.txt
 
