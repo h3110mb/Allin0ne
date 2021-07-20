@@ -86,6 +86,12 @@ echo $Divide
 SubOver -l $1/recon/Subdomain.txt -v > $1/subtko/output.txt
 sleep 30
 
+echo "let's go way back (Spidering)"
+echo $Divide
+sleep 10
+waybackurls $1/recon/ALive.txt > $1/waybackurls/wayback.txt
+gospider -S $1/recon/ALive.txt -o output -c 10 -d 1 --other-source --include-subs -p http://127.0.0.1:8080 >> $1/waybackurls/wayback.txt
+
 echo "Analysing Js Files"
 echo $Divide
 cat $1/waybackurls/wayback.txt | grep "\.js" | uniq | sort > $1/waybackurls/js.txt
