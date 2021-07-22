@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack}
+mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack,Dalfox}
 Divide="***************************************************************************"
 
 echo "Gathering Subdomain"
