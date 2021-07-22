@@ -107,4 +107,6 @@ echo $Divide
 sleep 15
 python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk '{print $2}' >> $1/clickjack/vulnerable.txt
 
-
+echo "Testing for XSS"
+echo $Divide
+cat $1/waybackurls/wayback.txt | gf xss | dalfox pipe -b h3110mb.xss.ht | tee $1/Dalfox/poc.txt
