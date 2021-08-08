@@ -1,35 +1,35 @@
 #!/bin/bash
 
-mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack,Dalfox}
-Divide="***************************************************************************"
+mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack,Dalfox,Directory}
+echo  "***************************************************************************"
 
 echo "Gathering Subdomain"
-echo $Divide
+echo "***************************************************************************"
 sleep 15
 
 subfinder -silent -d $1 > $1/recon/Subdomain.txt 
 gau -subs $1 | cut -d / -f 3 | cut -d ":" -f 1| sort -u >> $1/recon/Subdomain.txt 
 assetfinder -subs-only $1 >> $1/recon/Subdomain.txt 
 findomain -t $1 -q -u $1/recon/findomain.txt
-for domain in $(cat findomain.txt );do findomain -t $domain -q ;done >> $1/recon/Subdomain.txt 
+for domain in $(cat $1/recon/findomain.txt );do findomain -t $domain -q ;done >> $1/recon/Subdomain.txt 
 
 sleep 15
 
 echo "Sorting Subdomain"
-echo $Divide
+echo "***************************************************************************"
 sleep 15
 
 cat $1/recon/Subdomain.txt| sort -u | uniq > $1/recon/Final_subdomain.txt
 
 
 echo "Testing for Alive Subdomains"
-echo $Divide
+echo "***************************************************************************"
 sleep 15
 cat $1/recon/Final_subdomain.txt| httpx -silent > $1/recon/ALive.txt
 
 
 echo "Sending all URLs to Nuclei|Sit Back and Relax"
-echo $Divide
+echo "***************************************************************************"
 sleep 15
 
 
@@ -73,40 +73,47 @@ nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/dns/ -silent -c 20 
 
 
 echo "Grabbing Screenshots "
-echo $Divide
+echo "***************************************************************************"
 cat $1/recon/ALive.txt | aquatone -o $1/screenshot/aquatone
 
 echo "Scanning for Open Ports"
-echo $Divide
-naabu -v -silent -iL $1/recon/Subdomain.txt -o $1/ports/naabu_port.txt   
-nmap -sC -sV -iL $1/recon/ALive.txt -t 3 -o $1/ports/nmap
+echo "***************************************************************************"   
+nmap -sC -sV -iL $1/recon/ALive.txt  -oA $1/ports/nmap
 
 echo "Testing for Subdomain Takeover"
-echo $Divide
+echo "***************************************************************************"
 SubOver -l $1/recon/Subdomain.txt -v > $1/subtko/output.txt
 sleep 30
 
 echo "let's go way back (Spidering)"
-echo $Divide
+echo "***************************************************************************"
 sleep 10
 waybackurls $1/recon/ALive.txt > $1/waybackurls/wayback.txt
 gospider -S $1/recon/ALive.txt -o output -c 10 -d 1 --other-source --include-subs -p http://127.0.0.1:8080 >> $1/waybackurls/wayback.txt
 
 echo "Analysing Js Files"
-echo $Divide
+echo "***************************************************************************"
 cat $1/waybackurls/wayback.txt | grep "\.js" | uniq | sort > $1/waybackurls/js.txt
 cat $1/waybackurls/js.txt | hakcheckurl | grep -v 404 | grep -v 500 | grep -v 410 > $1/js/js_alive.txt
 
+echo "Searching for Links"
+echo "***************************************************************************"
+for domain in $(cat $1/waybackurls/js.txt);do python3 ~/tools/linkfinder.py -i $domain -o cli;done >>$1/waybackurls/js_link.txt
 
 echo "Checking For Broken Links"
-echo $Divide
+echo "***************************************************************************"
 for domain in $(cat $1/recon/ALive.txt );do blc $domain;done >> $1/BLC/broken_link.txt
 
 echo "Checking For Clickjacking"
-echo $Divide
+echo "***************************************************************************"
 sleep 15
 python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk '{print $2}' >> $1/clickjack/vulnerable.txt
 
+
 echo "Testing for XSS"
-echo $Divide
+echo "***************************************************************************"
 cat $1/waybackurls/wayback.txt | gf xss | dalfox pipe -b h3110mb.xss.ht | tee $1/Dalfox/poc.txt
+
+echo "Doing DirSearch"
+echo "***************************************************************************"
+for x in $($1/recon/ALive.txt);do ffuf -u $x/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,302;done >> $1/Directory/$x
