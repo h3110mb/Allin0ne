@@ -88,13 +88,15 @@ sleep 30
 echo "let's go way back (Spidering)"
 echo "***************************************************************************"
 sleep 10
-waybackurls $1/recon/ALive.txt > $1/waybackurls/wayback.txt
-gospider -S $1/recon/ALive.txt -o output -c 10 -d 1 --other-source --include-subs -p http://127.0.0.1:8080 >> $1/waybackurls/wayback.txt
+waybackurls $1/recon/ALive.txt |tee $1/waybackurls/wayback.txt
+gospider -S $1/recon/ALive.txt -o output -c 10 -d 1 --other-source --include-subs -p http://127.0.0.1:8080 |tee $1/waybackurls/wayback.txt
 
 echo "Analysing Js Files"
 echo "***************************************************************************"
-cat $1/recon/Subdomain.txt |subjs | sort -u | uniq > $1/waybackurls/js.txt
-cat $1/waybackurls/js.txt | hakcheckurl | grep -v 404 | grep -v 500 | grep -v 410 > $1/js/js_alive.txt
+cat $1/recon/Subdomain.txt |subjs |grep "js"| sort -u | uniq |tee $1/waybackurls/js.txt
+cat $1/waybackurls/js.txt | hakcheckurl | grep "200" |awk '{print $2}'|tee $1/js/js_alive.txt
+for url in $(cat $1/waybackurls/js_alive.txt);do python3 ~/tools/secretfinder/SecretFinder.py -i $url -o cli;done | tee $1/waybackurls/secretfinder.txt 
+
 
 echo "Searching for Links"
 echo "***************************************************************************"
@@ -102,12 +104,12 @@ for domain in $(cat $1/recon/ALive.txt);do echo e "\n\n============URL: "$domain
 
 echo "Checking For Broken Links"
 echo "***************************************************************************"
-for domain in $(cat $1/recon/ALive.txt );do blc $domain;done >> $1/BLC/broken_link.txt
+for domain in $(cat $1/recon/ALive.txt );do blc $domain;done |tee $1/BLC/broken_link.txt
 
 echo "Checking For Clickjacking"
 echo "***************************************************************************"
 sleep 15
-python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk '{print $2}' >> $1/clickjack/vulnerable.txt
+python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk '{print $2}' |tee $1/clickjack/vulnerable.txt
 
 
 echo "Testing for XSS"
@@ -116,4 +118,4 @@ cat $1/waybackurls/wayback.txt | gf xss | dalfox pipe -b h3110mb.xss.ht | tee $1
 
 echo "Doing DirSearch"
 echo "***************************************************************************"
-for x in $($1/recon/ALive.txt);do ffuf -u $x/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,302;done >> $1/Directory/$x
+for x in $($1/recon/ALive.txt);do ffuf -u $x/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,302;done |tee $1/Directory/$x
