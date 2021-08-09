@@ -98,7 +98,7 @@ cat $1/waybackurls/js.txt | hakcheckurl | grep -v 404 | grep -v 500 | grep -v 41
 
 echo "Searching for Links"
 echo "***************************************************************************"
-for domain in $(cat $1/waybackurls/js.txt);do python3 ~/tools/linkfinder.py -i $domain -o cli;done >>$1/waybackurls/js_link.txt
+for domain in $(cat $1/recon/ALive.txt);do echo e "\n\n============URL: "$domain"================";python3 ~/tools/LinkFinder/linkfinder.py -i $domain -o cli;done| tee $1/waybackurls/js_link.txt
 
 echo "Checking For Broken Links"
 echo "***************************************************************************"
