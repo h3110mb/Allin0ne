@@ -11,7 +11,7 @@ subfinder -silent -d $1 > $1/recon/Subdomain.txt
 gau -subs $1 | cut -d / -f 3 | cut -d ":" -f 1| sort -u >> $1/recon/Subdomain.txt 
 assetfinder -subs-only $1 >> $1/recon/Subdomain.txt 
 findomain -t $1 -q -u $1/recon/findomain.txt
-for domain in $(cat $1/recon/findomain.txt );do findomain -t $domain -q ;done >> $1/recon/Subdomain.txt 
+for domain in $(cat $1/recon/findomain.txt );do  echo e "\n\n============URL: "$domain"================"; findomain -t $domain -q ;done >> $1/recon/Subdomain.txt 
 
 sleep 15
 
@@ -95,7 +95,7 @@ echo "Analysing Js Files"
 echo "***************************************************************************"
 cat $1/recon/Subdomain.txt |subjs |grep "js"| sort -u | uniq |tee $1/waybackurls/js.txt
 cat $1/waybackurls/js.txt | hakcheckurl | grep "200" |awk '{print $2}'|tee $1/js/js_alive.txt
-for url in $(cat $1/waybackurls/js_alive.txt);do python3 ~/tools/secretfinder/SecretFinder.py -i $url -o cli;done | tee $1/waybackurls/secretfinder.txt 
+for url in $(cat $1/waybackurls/js_alive.txt);do echo e "\n\n============URL: "$domain"================"; python3 ~/tools/secretfinder/SecretFinder.py -i $url -o cli;done | tee $1/waybackurls/secretfinder.txt 
 
 
 echo "Searching for Links"
@@ -104,11 +104,11 @@ for domain in $(cat $1/recon/ALive.txt);do echo e "\n\n============URL: "$domain
 
 echo "Sending to Paramspider"
 echo "***************************************************************************"
-for domain in $(cat cat $1/recon/ALive.txt);do python3 ~/tools/ParamSpider/paramspider.py -d $domain --quiet --level high --exclude woff,css,js,png,svg,php,jpg;done | tee $1/recon/params.txt
+for domain in $(cat cat $1/recon/ALive.txt);do echo e "\n\n============URL: "$domain"================"; python3 ~/tools/ParamSpider/paramspider.py -d $domain --quiet --level high --exclude woff,css,js,png,svg,php,jpg;done | tee $1/recon/params.txt
 
 echo "Checking For Broken Links"
 echo "***************************************************************************"
-for domain in $(cat $1/recon/ALive.txt );do blc $domain;done |tee $1/BLC/broken_link.txt
+for domain in $(cat $1/recon/ALive.txt );do echo e "\n\n============URL: "$domain"================"; blc $domain;done |tee $1/BLC/broken_link.txt
 
 echo "Checking For Clickjacking"
 echo "***************************************************************************"
@@ -125,4 +125,4 @@ cat $1/waybackurls/wayback.txt |qsreplace ‘http://169.254.169.254/latest/meta-
 
 echo "Doing DirSearch"
 echo "***************************************************************************"
-for x in $($1/recon/ALive.txt);do ffuf -u $x/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,302;done |tee $1/Directory/$x
+for x in $($1/recon/ALive.txt);do echo e "\n\n============URL: "$domain"================"; ffuf -u $x/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -mc 200,302;done |tee $1/Directory/$x
