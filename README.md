@@ -14,7 +14,7 @@ Installation
 
 Usage
 ---
-bash
+bash AllinOne.sh target.com
 
 Credits
 ---
