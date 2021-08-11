@@ -1,4 +1,4 @@
-# Allin0ne - A bug Bounty Automation Tool
+# Allin0ne - A Bug Bounty Automation Tool
 
 Motive of this repo is to automate boring task at the maximun extent chaining various tools being used in day to day task of Hunters.More tools and oneliners will be added in future regularly.
 
