@@ -15,7 +15,10 @@ Installation
 Usage
 ---
 bash AllinOne.sh target.com
-__ Please add your XSSHunter payload at Line 115__
+
+IMPORTANT
+---
+***Please add your XSSHunter payload at Line 115***
 
 Credits
 ---
