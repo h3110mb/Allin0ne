@@ -18,7 +18,7 @@ Usage
 
 IMPORTANT
 ---
-***Please add your XSSHunter payload at Line 115***
+***Please add your XSSHunter payload at Line 121***
 
 Credits
 ---
