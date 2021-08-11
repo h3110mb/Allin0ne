@@ -14,7 +14,7 @@ Installation
 
 Usage
 ---
-bash AllinOne.sh target.com
+>bash AllinOne.sh target.com
 
 IMPORTANT
 ---
