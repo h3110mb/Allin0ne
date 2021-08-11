@@ -1,4 +1,4 @@
-# Allin0ne
+# Allin0ne - A bug Bounty Automation Tool
 
 Motive of this repo is to automate boring task at the maximun extent chaining various tools being used in day to day task of Hunters.More tools and oneliners will be added in future regularly.
 
@@ -15,6 +15,7 @@ Installation
 Usage
 ---
 bash AllinOne.sh target.com
+__ Please add your XSSHunter payload at Line 115__
 
 Credits
 ---
