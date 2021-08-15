@@ -5,7 +5,8 @@ sudo apt-get install python3;
 sudo apt-get install python3-pip;
 sudo apt-get install ruby;
 sudo apt-get install screen;
-sudo apt-get install golang
+sudo apt-get install golang;
+sudo apt-get install nodejs;
 
 mkdir ~/tools;
 
