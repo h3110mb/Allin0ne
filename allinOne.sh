@@ -41,6 +41,17 @@ echo "Testing for Subdomain Takeover"
 echo "------------------------------------------------------"
 nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/takeovers/ -silent -c 20 -o $1/nuclei/subtko.txt
 
+echo "testing for Exposed Panels"
+echo "----------------------------------------"
+nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/exposed-panels/ -silent -c 50 
+
+echo "testing for Exposed Tokens"
+echo "----------------------------------------"
+nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/exposed-tokens/ -silent -c 50
+
+echo "testing for Exposed Panels"
+echo "----------------------------------------"
+nuclei -l $1/recon/Final_subdomain.txt -t ~/nuclei-templates/exposed-panels/ -silent -c 50 
 
 echo "Testing for security misconfiguration"
 echo "------------------------------------------------------"
