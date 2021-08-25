@@ -13,6 +13,7 @@ mkdir ~/tools;
 go get -u github.com/tomnomnom/gf;
 go get github.com/tomnomnom/hacks/waybackurls;
 go get -u github.com/tomnomnom/assetfinder;go get -u github.com/tomnomnom/qsreplace;
+go get -u github.com/tomnomnom/assetfinder;
 go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei;
 git clone https://github.com/projectdiscovery/nuclei-templates;
 GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder;
