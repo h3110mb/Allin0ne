@@ -18,6 +18,7 @@ go get -u -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei;
 git clone https://github.com/projectdiscovery/nuclei-templates;
 GO111MODULE=on go get -u -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder;
 GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx;
+GO111MODULE=on go get -v github.com/projectdiscovery/shuffledns/cmd/shuffledns;
 GO111MODULE=on go get -u -v github.com/lc/gau;
 go get github.com/Ice3man543/SubOver;
 GO111MODULE=on go get -u github.com/jaeles-project/gospider;
